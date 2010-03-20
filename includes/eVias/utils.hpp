@@ -80,7 +80,6 @@ namespace eVias {
 		
 		return password;
 	}
-	
 
 };
 #endif

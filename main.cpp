@@ -3,6 +3,7 @@
 #include <cstdlib>  // srand, rand
 
 #include "includes/eVias/utils.hpp" // genPassword
+#include "includes/eVias/console.hpp" // eViasConsole
 
 using namespace eVias; // eViasConsole, genPassword
 using namespace std; // cout, endl
@@ -13,6 +14,14 @@ int main(int argc, char *argv[])
 	int passLen = 8;
 	time_t seed;
 
+	string usageMsg("./bin/ePassGen [-ln] [passCount] [passSize]");
+
+	eViasConsole *app = new eViasConsole("ePassGen", usageMsg, argc, argv);
+
+	app->printMe();
+
+	delete app;
+/*
 	// argument parsing
 	if (argc > 1) {
 		// @todo:
@@ -48,6 +57,6 @@ int main(int argc, char *argv[])
 
 	if (maxPass < 5) 
 		cout << endl;
-
+*/
     return 0;
 }
