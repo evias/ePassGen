@@ -1,8 +1,8 @@
-#include <iostream>
-#include <ctime>
-#include <cstdlib>
+#include <iostream> // cout, endl
+#include <ctime>    // time, time_t
+#include <cstdlib>  // srand, rand
 
-#include "includes/eVias/utils.hpp"
+#include "includes/eVias/utils.hpp" // genPassword
 
 using namespace eVias;
 using namespace std;
