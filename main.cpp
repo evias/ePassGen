@@ -16,12 +16,14 @@ int main(int argc, char *argv[])
 
 	string usageMsg("./bin/ePassGen [-ln] [passCount] [passSize]");
 
+	// @todo parse argument and return needed data
+	// not doing anything but print until now ..
 	eViasConsole *app = new eViasConsole("ePassGen", usageMsg, argc, argv);
 
 	app->printMe();
 
 	delete app;
-/*
+
 	// argument parsing
 	if (argc > 1) {
 		// @todo:
@@ -57,6 +59,6 @@ int main(int argc, char *argv[])
 
 	if (maxPass < 5) 
 		cout << endl;
-*/
+
     return 0;
 }
