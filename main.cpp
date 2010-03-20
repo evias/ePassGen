@@ -4,16 +4,20 @@
 
 #include "includes/eVias/utils.hpp" // genPassword
 
-using namespace eVias;
-using namespace std;
+using namespace eVias; // eViasConsole, genPassword
+using namespace std; // cout, endl
 
 int main(int argc, char *argv[])
 {
 	int maxPass = 100;
 	int passLen = 8;
+	time_t seed;
 
 	// argument parsing
 	if (argc > 1) {
+		// @todo:
+		// - argument with - (eViasConsole)
+
 		// has args for load
 		if (argc == 2) {
 			// only passwords count
@@ -26,9 +30,9 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	// generate random seed
-	time_t seed;
-	time(&seed);
+	// generate execution time related seed
+	// will differ every SECOND
+	time  (&seed);
 	srand ((unsigned long) seed);
 
 	// generate maxPass passwords
