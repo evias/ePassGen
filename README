@@ -1,0 +1,44 @@
+# ePassGen by Grégory Saive (@eVias)
+# Generate one or more passwords instantly.
+# Thanks for reading me, enjoy
+
+#--------------------------------
+# Usage :
+
+# eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] : 
+make build
+
+# to generate 100 passwords of length 8 in a grid
+# eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] :
+.bin/ePassGen
+
+# to generate 7 passwords of length 8 in a grid
+# eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] :
+.bin/ePassGen 7
+
+# to generate 11 passwords of length 6 in a grid
+# eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] :
+.bin/ePassGen 11 6
+#--------------------------------
+
+
+
+#--------------------------------
+# Clean:
+
+# to clean the junk (*.o) directory only
+# eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] :
+make clean
+
+# to clean the junk (*.o) AND the executable file
+# eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] :
+make mrpropre
+#--------------------------------
+
+
+#--------------------------------
+# Needs for compile
+
+- libstdc++
+- g++ make
+#--------------------------------
