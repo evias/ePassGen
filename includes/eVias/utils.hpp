@@ -55,41 +55,27 @@ namespace eVias {
 	inline std::string genPassword(int length)
 	{
 		std::string password = "";
-
 		int randBoolInt = -1; // 0 or 1
 		int secBoolInt  = -1; // 0 or 1
-		char randChrInt	= '0'; // between 0 and 9
-		char randLChr   = '0'; // between 97 and 122 (lower char)
-		char randUChr   = '0'; // between 65 and 90 (upper char)
 		char *randPChr 	= new char[2]; // to string conversion
 
-		// ASCII Correspondance:
-		// human representation 	=> ASCII RANGE
-		// 			[0-9]			=> [48-57]
-		//			[A-Z]			=> [65-90]
-		// 			[a-z] 			=> [97-122]
 		for (int i = 0; i < length; i++) 
 		{
 			randBoolInt = rand() % 2; // [0,1]
 			secBoolInt  = rand() % 2; // [0,1]
-			randChrInt 	= (char) ((rand() % 10) + 48); // [0-9]
-			randUChr    = (char) ((rand() % 26) + 65); // [A-Z]
-			randLChr 	= (char) ((rand() % 26) + 97); // [a-z]
 
 			if (randBoolInt == 1) {
 				if (secBoolInt == 1)
-					randPChr[0] = randLChr; // lower case
+					randPChr[0] = (char) ((rand() % 26) + 97); // [a-z]
 				else 
-					randPChr[0] = randUChr; // upper case
+					randPChr[0] = (char) ((rand() % 26) + 65); // [A-Z]
 			}
 			else {
-				randPChr[0] = randChrInt; // digit
+				randPChr[0] = (char) ((rand() % 10) + 48); // [0-9]
 			}
 
 			password.append(randPChr);
 		}
-
-		// clean memory
 		delete randPChr;
 		
 		return password;
