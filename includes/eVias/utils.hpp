@@ -63,6 +63,11 @@ namespace eVias {
 		char randUChr   = '0'; // between 65 and 90 (upper char)
 		char *randPChr 	= new char[2]; // to string conversion
 
+		// ASCII Correspondance:
+		// human representation 	=> ASCII RANGE
+		// 			[0-9]			=> [48-57]
+		//			[A-Z]			=> [65-90]
+		// 			[a-z] 			=> [97-122]
 		for (int i = 0; i < length; i++) 
 		{
 			randBoolInt = rand() % 2; // [0,1]
