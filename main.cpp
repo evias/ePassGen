@@ -13,41 +13,54 @@ int main(int argc, char *argv[])
 	int maxPass = 100;
 	int passLen = 8;
 	time_t seed;
+	string usageMsg("./bin/ePassGen [-l <passSize> -n <passCount>]");
+    string args[] = {
+        "-n", "-l"
+    };
+    vector<string> argsName;
+    map<string,string> callArgs;
+    map<int,string> argsPos;
 
-	string usageMsg("./bin/ePassGen [-ln] [passCount] [passSize]");
+    argsName.assign(args, args + 2);
+    argsPos.insert(pair<int,string>(1,"-n"));
+    argsPos.insert(pair<int,string>(2,"-l"));
 
-	// @todo parse argument and return needed data
-	// not doing anything but print until now ..
-	eViasConsole *app = new eViasConsole("ePassGen", usageMsg, argc, argv);
+    // use of custom argument parsing, allows me
+    // to deal with and without arguments name.
+    eViasConsole *app = new eViasConsole("ePassGen", usageMsg, argc, argv);
 
-	app->printMe();
+    // allowed args are the strings allowed as -"something" keys
+    // args position is used if no "-l" or "-n" is specified
+    // means a specified order needs to be read
+    // parseAll is the magic
+    app ->setAllowedArgs(argsName)
+        ->setArgsPositions(argsPos)
+	    ->parseAll();
 
+    // set data if arguments were parsed successfully
+    if (app->lastReturn() == RET_SUCCESS) {
+        callArgs = app->readData();
+        if (callArgs["ERR"].empty()) {
+            maxPass = atoi(callArgs["-n"].c_str());
+            passLen = atoi(callArgs["-l"].c_str());
+        }
+        else {
+            cout    << callArgs["ERR"]  << endl;
+            return app->lastReturn();
+        }
+    }
+
+    // only needed for argument parsing
 	delete app;
-
-	// argument parsing
-	if (argc > 1) {
-		// @todo:
-		// - argument with - (eViasConsole)
-
-		// has args for load
-		if (argc == 2) {
-			// only passwords count
-			maxPass = atoi(argv[1]);
-		}
-		else {
-			// both count and length
-			maxPass = atoi(argv[1]);
-			passLen = atoi(argv[2]);
-		}
-	}
 
 	// generate execution time related seed
 	// will differ every SECOND
 	time  (&seed);
 	srand ((unsigned long) seed);
 
+    int i = 0;
 	// generate maxPass passwords
-	for (int i = 1; i <= maxPass; i++) {
+	for (i = 1; i <= maxPass; i++) {
 		// generate password of length passLen
 		cout << genPassword(passLen);
 
@@ -57,7 +70,7 @@ int main(int argc, char *argv[])
 			cout << " ";
 	}
 
-	if (maxPass < 5) 
+	if ((i-1) < 5 || (i-1) % 5 != 0)
 		cout << endl;
 
     return 0;

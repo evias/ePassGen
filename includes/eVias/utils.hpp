@@ -6,13 +6,17 @@
 #include <algorithm> 	// transform
 #include <sstream> 		// stringstream
 #include <functional>   // ptr_fun, toupper, tolower
+#include <map>          // map
+#include <vector>       // vector
 
-#include <cctype>		
+#include <cctype>
 #include <ctime>		// time
 #include <cstdlib> 		// srand, rand
 
 // @todo define String class
 namespace eVias {
+
+    using namespace std;
 
 	// eViasString errorCodes
 	enum errorCodes {
@@ -20,66 +24,25 @@ namespace eVias {
 		ERR_NOT_A_STRING	= 10
 	};
 
+    void s_mapDump(map<string,string>);
+    void s_vecDump(vector<string>);
+
 	// int to string conversion
 	// @todo define in String class
 	// @return std::string
-	inline std::string intToString(int iIn) 
-	{
-		std::stringstream ss;
-
-		ss	<< iIn;
-
-		return ss.str();
-	}
+	std::string intToString(int iIn);
 
 	// @todo define in String class
-	inline std::string strToLower(std::string s)
-	{
-		std::transform( s.begin(), s.end(), s.begin(), std::ptr_fun(::tolower) );
-
-		return s;
-	}
+	std::string strToLower(std::string s);
 
 	// @todo define in String class
-	inline std::string strToUpper(std::string s)
-	{
-		std::transform( s.begin(), s.end(), s.begin(), std::ptr_fun(::toupper) );
-
-		return s;
-	}
+	std::string strToUpper(std::string s);
 
 	// Generate and return random password
 	// @uses rand() .. srand() must be initialized before
 	// @param int length > Password length
 	// @return std::string
-	inline std::string genPassword(int length)
-	{
-		std::string password = "";
-		int randBoolInt = -1; // 0 or 1
-		int secBoolInt  = -1; // 0 or 1
-		char *randPChr 	= new char[2]; // to string conversion
-
-		for (int i = 0; i < length; i++) 
-		{
-			randBoolInt = rand() % 2; // [0,1]
-			secBoolInt  = rand() % 2; // [0,1]
-
-			if (randBoolInt == 1) {
-				if (secBoolInt == 1)
-					randPChr[0] = (char) ((rand() % 26) + 97); // [a-z]
-				else 
-					randPChr[0] = (char) ((rand() % 26) + 65); // [A-Z]
-			}
-			else {
-				randPChr[0] = (char) ((rand() % 10) + 48); // [0-9]
-			}
-
-			password.append(randPChr);
-		}
-		delete randPChr;
-		
-		return password;
-	}
+	std::string genPassword(int length);
 
 };
 #endif
