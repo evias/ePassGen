@@ -47,8 +47,10 @@ int main(int argc, char *argv[])
             passLen = atoi(callArgs["-l"].c_str());
         }
         else {
-            cout    << callArgs["ERR"]  << endl;
-            return app->lastReturn();
+            cout    << "Error: " << callArgs["ERR"] << endl
+                    << "Code: " << int(app->lastReturn())
+                    << endl;
+            return int(app->lastReturn());
         }
     }
     else {

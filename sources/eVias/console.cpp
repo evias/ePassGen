@@ -65,15 +65,15 @@ namespace eVias {
                 itFoundArg = find(this->_vAllowed.begin(), this->_vAllowed.end(), (*itMixed));
 
                 // get distance between beginning and iterator position
-                stIndexFound = distance(this->_vArgs.begin(), itFoundArg);
+                stIndexFound = distance(this->_vAllowed.begin(), itFoundArg);
 
-                if (stIndexFound != this->_vArgs.size()) {
+                if (stIndexFound != this->_vAllowed.size()) {
                     // valid argument, will be added next turn
                     continue;
                 }
                 else {
                     // not a valid argument
-                    this->_lastReturn = WRONG_DATA_INPUT;
+                    this->_lastReturn = ARG_NAME_INVALID;
                     return this;
                 }
             }
