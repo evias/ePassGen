@@ -5,20 +5,23 @@
 #--------------------------------
 # Usage :
 
-# eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] : 
+# eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] :
 make build
 
 # to generate 100 passwords of length 8 in a grid
 # eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] :
-.bin/ePassGen
-
-# to generate 7 passwords of length 8 in a grid
-# eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] :
-.bin/ePassGen 7
+./bin/ePassGen
 
 # to generate 11 passwords of length 6 in a grid
 # eVias@[eviasdev:/home/user/evias/dev/cpp/ePassGen] :
-.bin/ePassGen 11 6
+./bin/ePassGen 11 6
+
+# to use named arguments:
+# 5 passwords of length 8
+./bin/ePassGen -n 5 -l 8
+# OR
+./bin/ePassGen -l 8 -n 5
+
 #--------------------------------
 
 
