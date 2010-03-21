@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
     map<int,string> argsPos;
 
     argsName.assign(args, args + 2);
+
+    // "Positions" allows call of program without arguments' name
     argsPos.insert(pair<int,string>(1,"-n"));
     argsPos.insert(pair<int,string>(2,"-l"));
 
@@ -35,7 +37,7 @@ int main(int argc, char *argv[])
     // parseAll is the magic
     app ->setAllowedArgs(argsName)
         ->setArgsPositions(argsPos)
-	    ->parseAll();
+	    ->parseAll(); // Will return RET_SUCCESS || NOTHING_TO_DO in good cases
 
     // set data if arguments were parsed successfully
     if (app->lastReturn() == RET_SUCCESS) {
@@ -47,6 +49,15 @@ int main(int argc, char *argv[])
         else {
             cout    << callArgs["ERR"]  << endl;
             return app->lastReturn();
+        }
+    }
+    else {
+        if (app->lastReturn() != NOTHING_TO_DO) {
+            cout    << "ERROR: program terminated with exit code: "
+                    << int(app->lastReturn())
+                    << endl;
+
+            return int(app->lastReturn());
         }
     }
 
