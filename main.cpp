@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
 {
 	int maxPass = 100;
 	int passLen = 8;
+    string sepString = " ";
 	time_t seed;
 	string usageMsg("./bin/ePassGen [-l <passSize> -n <passCount>]");
     string args[] = {
@@ -80,7 +81,7 @@ int main(int argc, char *argv[])
 		if (i % 5 == 0)
 			cout << endl;
 		else
-			cout << " ";
+			cout << sepString;
 	}
 
 	if ((i-1) < 5 || (i-1) % 5 != 0)

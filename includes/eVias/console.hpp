@@ -34,6 +34,9 @@ namespace eVias {
 
 	// @todo: add std::ofstream variable
 	// 	@brief: allows logging
+    // @todo: implement REQUIRED arguments state
+    //  @brief: specifies if the program can be called without
+    //          this argument
 	class eViasConsole
 	{
 		public :
@@ -71,7 +74,6 @@ namespace eVias {
 
             // public API
 			eViasConsole* const parseAll ();
-			eViasConsole* const	dispatchData ();
 
             eViasConsole* const addAllowedArg(string);      // append singular arg
             eViasConsole* const setAllowedArgs(s_vec);      // set multiple args
@@ -112,8 +114,8 @@ namespace eVias {
 
                 s_map::iterator testData = this->_mData.begin();
                 if (atoi(((*testData).first).c_str()) == 0) {
-                    this->_lastReturn = RET_SUCCESS;
                     // we have arguments name
+                    this->_lastReturn = RET_SUCCESS;
                     this->_mData.insert(pair<string,string>("ERR", "")); // no error
                     return this->_mData;
                 }
@@ -127,16 +129,16 @@ namespace eVias {
                 }
 
                 // no arguments name given, fetch with positions
-                bool dataFlag = true;
-                s_map formattedData;
-                is_map::iterator itPos = this->_mPositions.begin();
-
                 if (this->_mPositions.size() != this->_mData.size()) {
                     this->_lastReturn = WRONG_DATA_INPUT;
                     s_map error;
                     error.insert(pair<string, string>("ERR", "ERROR: data and positions do not equal"));
                     return error;
                 }
+
+                bool dataFlag = true;
+                s_map formattedData;
+                is_map::iterator itPos = this->_mPositions.begin();
 
                 for (; testData != this->_mData.end() && itPos != this->_mPositions.end();
                        testData++, itPos++)
@@ -157,6 +159,8 @@ namespace eVias {
 			void printMe();
 
 		protected :
+			eViasConsole* const	_dispatchData ();
+
 			bool _validateInput();
 			void _printUsage();
 

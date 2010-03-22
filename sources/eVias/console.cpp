@@ -18,7 +18,7 @@ namespace eVias {
 			this->_printUsage();
 		}
 
-        this->dispatchData();
+        this->_dispatchData();
 
 		return this;
 	}
@@ -33,7 +33,7 @@ namespace eVias {
 		return true;
 	}
 
-	eViasConsole* const eViasConsole::dispatchData() {
+	eViasConsole* const eViasConsole::_dispatchData() {
 		s_vec::iterator   itMixed;      // go through available args
         s_vec::iterator   itBefore;     // be able to work with arg-1
         s_vec::iterator   itFoundArg;   // use for finding current arg in allowed args
