@@ -38,6 +38,8 @@ int main(int argc, char *argv[])
     // parseAll is the magic
     app ->setAllowedArgs(argsName)
         ->setArgsPositions(argsPos)
+        ->setRequiredArgs(argsName)
+        ->canEmptyCall(true)
 	    ->parseAll(); // Will return RET_SUCCESS || NOTHING_TO_DO in good cases
 
     // set data if arguments were parsed successfully
@@ -49,18 +51,19 @@ int main(int argc, char *argv[])
         }
         else {
             cout    << "Error: " << callArgs["ERR"] << endl
-                    << "Code: " << int(app->lastReturn())
+                    << "Message: " << app->lastReturnMessage()
                     << endl;
-            return int(app->lastReturn());
+            return 2;
         }
     }
     else {
         if (app->lastReturn() != NOTHING_TO_DO) {
-            cout    << "ERROR: program terminated with exit code: "
-                    << int(app->lastReturn())
-                    << endl;
+            cout    << "ERROR: program terminated with exit message: "
+                    << endl     << "[ "
+                    << app->lastReturnMessage()
+                    << " ]"     << endl;
 
-            return int(app->lastReturn());
+            return 2;
         }
     }
 

@@ -4,7 +4,7 @@ namespace eVias {
 
 	 eViasConsole* const eViasConsole::parseAll() {
 		if (! (this->_argsCnt > 1)) {
-            this->_lastReturn = NOTHING_TO_DO;
+            this->_lastReturn = this->_canEmptyCall ? NOTHING_TO_DO : MISSING_REQUIRED;
 			return this;
 		}
 
@@ -20,6 +20,20 @@ namespace eVias {
 
         this->_dispatchData();
 
+        // stop if already broken..
+        if (this->_lastReturn != RET_SUCCESS) {
+            return this;
+        }
+
+        // post dispatch validation
+        bool postValidation = this->_validateInput();
+
+        if (! postValidation) {
+            this->_lastReturn = MISSING_REQUIRED;
+            return this;
+        }
+
+        this->_lastReturn = RET_SUCCESS;
 		return this;
 	}
 
@@ -29,25 +43,76 @@ namespace eVias {
 			return false;
 		}
 
+        if (this->_dataDispatched) {
+            return this->_hasRequired();
+        }
+
 		this->_lastReturn = RET_SUCCESS;
 		return true;
 	}
+
+    bool eViasConsole::_hasRequired() {
+        s_map::iterator itData = this->_mData.begin(); // data iteration
+        s_vec::iterator itFound; // search return
+        size_t indexAt;      // search validation
+        string keyName = ""; // used for readability
+        int countHaving = 0; // used for validation
+        int argIndex = -1;   // will be set if not-named arguments
+
+        // until end reached or requirements met
+        for (; itData != this->_mData.end() && countHaving != this->_mData.size(); itData++) {
+            if ((argIndex = atoi((*itData).first.c_str())) != 0) {
+                // not-named arguments
+                keyName = this->_mPositions[argIndex];
+            }
+            else {
+                // named arguments
+                keyName = (*itData).first;
+            }
+            // check for requirement of current argument
+            itFound = find(this->_vRequired.begin(), this->_vRequired.end(), keyName);
+            indexAt = distance(this->_vRequired.begin(), itFound);
+
+            if (indexAt != this->_vRequired.size()) {
+                // current argument is required
+                countHaving++;
+            }
+        }
+
+        if (countHaving != this->_vRequired.size()) {
+            // did not match all required arguments
+            return false;
+        }
+
+        return true;
+    }
 
 	eViasConsole* const eViasConsole::_dispatchData() {
 		s_vec::iterator   itMixed;      // go through available args
         s_vec::iterator   itBefore;     // be able to work with arg-1
         s_vec::iterator   itFoundArg;   // use for finding current arg in allowed args
         size_t            stIndexFound;  // find current arg
+        string keyName; // readability
 
         if (! (this->_vArgs.size() > 1)) {
             // only got executable name
-            this->_lastReturn = NOTHING_TO_DO;
+            this->_lastReturn = this->_canEmptyCall ? NOTHING_TO_DO : MISSING_REQUIRED;
             return this;
+        }
+
+        // test purpose (do not loop if any error.)
+        if (atoi(this->_vArgs[1].c_str()) != 0) {
+            // have only numbers, positions need to be set
+            if (! this->_argsPosSet) {
+                this->_lastReturn = ARGS_POS_NOT_SET;
+                return this;
+            }
         }
 
         // initialize
         itMixed = this->_vArgs.begin();
         itBefore= this->_vArgs.begin();
+
         for (int i = 0; itMixed != this->_vArgs.end(); itMixed++, i++) {
             if (i == 0) {
                 // first argument is program name
@@ -81,18 +146,14 @@ namespace eVias {
                 // arg value
                 if ((*itBefore)[0] == '-') {
                     // fetched valid - beginning argument .. now fetch its value
-                    this->_mData.insert(pair<string, string>((*itBefore), (*itMixed)));
+                    keyName = (*itBefore);
+                    this->_mData.insert(pair<string, string>(keyName, (*itMixed)));
                     continue;
                 }
 
-                if (itBefore == this->_vArgs.begin()) {
-                    // first loop, value without arg-name
-                    this->_mData.insert(pair<string,string>("1", (*itMixed)));
-                    continue;
-                }
-
-                // coming here means no arg-name for current argument value
-                this->_mData.insert(pair<string,string>((intToString(i+1)), (*itMixed)));
+                // coming here means no arg-name before value
+                keyName = this->_mPositions[i];
+                this->_mData.insert(pair<string,string>(keyName, (*itMixed)));
             }
         }
 
@@ -244,6 +305,50 @@ namespace eVias {
 
         this->_lastReturn = RET_SUCCESS;
         return this;
+    }
+
+    eViasConsole* const eViasConsole::setRequiredArgs(s_vec vReq) {
+        // is there any args to set to required
+        if (this->_vAllowed.empty()) {
+            this->_lastReturn = this->_canEmptyCall ? NOTHING_TO_DO : MISSING_REQUIRED;
+            return this;
+        }
+
+        if (vReq.size() > this->_vAllowed.size()) {
+            // have more required fields to set than actual arguments known
+            this->_lastReturn = TOO_MANY_REQUIRED;
+            return this;
+        }
+
+        bool validArgs = this->_validateArgKeys(vReq);
+
+        if (! validArgs) {
+            // .. speaks enough ?! ;]
+            this->_lastReturn = ARG_NAME_INVALID;
+            return this;
+        }
+
+        this->_vRequired.assign(vReq.begin(), vReq.end());
+
+        this->_lastReturn = RET_SUCCESS;
+        return this;
+    }
+
+    bool eViasConsole::_validateArgKeys(s_vec vArgs) {
+        s_vec::iterator itInput = vArgs.begin();
+        s_vec::iterator itFound;
+        size_t indexAt;
+
+        for (; itInput != vArgs.end(); itInput++) {
+            itFound = find(this->_vAllowed.begin(), this->_vAllowed.end(), (*itInput));
+            indexAt = distance(this->_vAllowed.begin(), itFound);
+
+            if (indexAt == this->_vAllowed.size()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 	void eViasConsole::_printUsage() {
