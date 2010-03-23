@@ -1,0 +1,7 @@
+# THIS FILE IS TO BE ADDED BECAUSE OF GIT NOT RECOGNIZING
+# EMPTY FOLDERS. STILL IF YOU WANT TO COMPILE MY PROGRAM
+# YOU'D BETTER HAVE A junk FOLDER IN WHICH ALL OBJECTS
+# ARE STORED, makes all that "make clean" magic ;]
+
+# you can execute the program without compiling, see README
+# at the root path
